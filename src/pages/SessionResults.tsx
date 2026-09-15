@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getSession, listResponses } from '../firebase/sessions';
+import { getSession, listResponses, setResultsPublic } from '../firebase/sessions';
 import { getTestDefinition } from '../testDefinitions/registry';
 import { computeResults, computeItemLeans } from '../testDefinitions/scoring';
 import { generateInsights } from '../testDefinitions/generateInsights';
@@ -13,7 +13,7 @@ export default function SessionResults() {
   const [responses, setResponses] = useState<TestResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [copied, setCopied] = useState(false);
+  const [copiedPublic, setCopiedPublic] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -39,12 +39,18 @@ export default function SessionResults() {
   const results: DimensionResult[] = computeResults(test, responses);
   const itemLeans = computeItemLeans(test, responses);
   const insights = generateInsights(test, results, itemLeans, responses.length);
-  const resultsUrl = `${window.location.origin}${window.location.pathname}#/session/${session.id}/results`;
+  const publicResultsUrl = `${window.location.origin}${window.location.pathname}#/r/${session.id}`;
 
-  const copyLink = async () => {
-    await navigator.clipboard.writeText(resultsUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const copyPublicLink = async () => {
+    await navigator.clipboard.writeText(publicResultsUrl);
+    setCopiedPublic(true);
+    setTimeout(() => setCopiedPublic(false), 2000);
+  };
+
+  const toggleResultsPublic = async () => {
+    const next = !session.resultsPublic;
+    await setResultsPublic(session.id, next);
+    setSession({ ...session, resultsPublic: next });
   };
 
   const downloadCsv = () => {
@@ -80,9 +86,15 @@ export default function SessionResults() {
           </p>
         </div>
         <div className="header-actions">
-          <button className="btn-secondary" onClick={copyLink}>
-            {copied ? 'Lien copié !' : 'Partager le lien'}
-          </button>
+          <label className="checkbox-label" style={{ marginRight: 4 }}>
+            <input type="checkbox" checked={session.resultsPublic} onChange={toggleResultsPublic} />
+            Lien public (sans connexion)
+          </label>
+          {session.resultsPublic && (
+            <button className="btn-secondary" onClick={copyPublicLink}>
+              {copiedPublic ? 'Copié !' : 'Copier le lien public'}
+            </button>
+          )}
           <button className="btn-secondary" onClick={downloadCsv} disabled={responses.length === 0}>
             Télécharger (CSV)
           </button>
