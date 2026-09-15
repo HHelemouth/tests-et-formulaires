@@ -50,6 +50,9 @@ export default function Dashboard() {
       <header className="page-header">
         <h1>Mes sessions</h1>
         <div className="header-actions">
+          <Link to="/methods" className="btn-secondary">
+            Méthodes UX
+          </Link>
           <span className="user-email">{user?.email}</span>
           <button className="btn-secondary" onClick={() => logout()}>
             Se déconnecter

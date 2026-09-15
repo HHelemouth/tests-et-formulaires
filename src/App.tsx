@@ -6,6 +6,7 @@ import SessionDetail from './pages/SessionDetail';
 import SessionResults from './pages/SessionResults';
 import PublicTest from './pages/PublicTest';
 import PublicResults from './pages/PublicResults';
+import MethodsLibrary from './pages/MethodsLibrary';
 
 export default function App() {
   return (
@@ -35,6 +36,14 @@ export default function App() {
             element={
               <RequireAuth>
                 <SessionResults />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/methods"
+            element={
+              <RequireAuth>
+                <MethodsLibrary />
               </RequireAuth>
             }
           />
