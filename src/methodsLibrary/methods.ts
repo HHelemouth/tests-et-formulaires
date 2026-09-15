@@ -114,4 +114,59 @@ export const UX_METHODS: UXMethod[] = [
     reference: 'Colombo & Pasch (2012)',
     link: 'https://uxmind.eu/2014/08/14/10-heuristiques-pour-une-ux-optimale-de-colombo-et-pasch/',
   },
+  {
+    id: 'sus',
+    name: 'SUS (System Usability Scale)',
+    category: 'Évaluation quantitative',
+    description:
+      "Le questionnaire d'utilisabilité le plus utilisé au monde : 10 affirmations, échelle d'accord en 5 points, items alternés positifs/négatifs. Donne un score unique sur 100, directement comparable entre projets et dans le temps.",
+    whenToUse:
+      "Après un test utilisateur sur quelques scénarios, pour obtenir un score benchmarkable rapidement (3-4 min de passation). Idéal pour comparer plusieurs versions d'un même outil, ou pour se situer par rapport à d'autres études publiées.",
+    reference: 'Brooke (1996) ; version française validée (F-SUS) : Gronier & Baudet (2021)',
+    link: 'https://www.guillaumegronier.com/blog/files/6545bc93a9d0952c2afac2581129ae7c-0.html',
+  },
+  {
+    id: 'heuristiques-nielsen',
+    name: 'Heuristiques de Nielsen',
+    category: 'Évaluation experte',
+    description:
+      "Les 10 heuristiques d'utilisabilité les plus citées en UX (visibilité du statut système, correspondance système/monde réel, contrôle utilisateur, cohérence, prévention des erreurs, reconnaissance plutôt que rappel, etc.).",
+    whenToUse:
+      "Pour une évaluation experte rapide et structurée d'une interface, seule ou en équipe, sans avoir besoin de recruter des utilisateurs. Bon point de départ avant un test utilisateur plus poussé.",
+    reference: 'Nielsen, J. (1994). 10 Usability Heuristics for User Interface Design.',
+    link: 'https://www.nngroup.com/articles/ten-usability-heuristics/',
+  },
+  {
+    id: 'cognitive-walkthrough',
+    name: 'Cognitive Walkthrough',
+    category: 'Évaluation experte',
+    description:
+      "Évaluation experte pas-à-pas : pour chaque étape d'un parcours utilisateur, l'évaluateur se met à la place d'un utilisateur type et se pose 4 questions (L'utilisateur cherchera-t-il à faire cette action ? La verra-t-il ? La reconnaîtra-t-elle comme la bonne ? Comprendra-t-il le retour du système ?).",
+    whenToUse:
+      "Pour un parcours précis et critique (ex. onboarding, tunnel de conversion) où chaque friction coûte cher — plus fin qu'une évaluation heuristique généraliste, mais plus long à mener.",
+    reference: 'Polson, Lewis, Rieman & Wharton (1992)',
+    link: 'https://www.nngroup.com/articles/cognitive-walkthroughs/',
+  },
+  {
+    id: 'card-sorting',
+    name: 'Card Sorting',
+    category: 'Idéation & conception',
+    description:
+      "Les participants regroupent des cartes (contenus, fonctionnalités, catégories) selon une logique qui leur est propre, puis nomment leurs groupes. Version ouverte (les catégories ne sont pas données) ou fermée (les catégories sont fixées, les participants y classent les cartes).",
+    whenToUse:
+      "Pour structurer ou valider une architecture d'information, un menu, une navigation — particulièrement utile en amont d'une refonte de Design System ou quand un outil est jugé confus.",
+    reference: 'Méthode classique de recherche UX, popularisée par Donna Spencer',
+    link: 'https://www.nngroup.com/articles/card-sorting-definition/',
+  },
+  {
+    id: 'kano-model',
+    name: 'Modèle de Kano',
+    category: 'Idéation & conception',
+    description:
+      "Classe les fonctionnalités en 3 catégories selon leur effet sur la satisfaction : basiques (leur absence frustre, leur présence n'est pas remarquée), de performance (plus il y en a, plus la satisfaction augmente linéairement), et d'enchantement (leur absence ne dérange pas, leur présence enthousiasme).",
+    whenToUse:
+      "En phase de cadrage ou de priorisation de roadmap, pour arbitrer entre fonctionnalités indispensables et fonctionnalités différenciantes — utile pour argumenter des choix face à des parties prenantes.",
+    reference: 'Kano, N., Seraku, N., Takahashi, F., & Tsuji, S. (1984)',
+    link: 'https://www.nngroup.com/articles/kano-model/',
+  },
 ];
