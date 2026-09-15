@@ -37,6 +37,7 @@ export async function createSession(params: {
     testTypeId: params.testTypeId,
     status: 'open',
     requireEmail: params.requireEmail,
+    resultsPublic: false,
     responseCount: 0,
     createdAt: serverTimestamp(),
   });
@@ -56,6 +57,7 @@ export async function listSessionsForUser(ownerId: string): Promise<TestSession[
       testTypeId: data.testTypeId,
       status: data.status,
       requireEmail: data.requireEmail,
+      resultsPublic: data.resultsPublic ?? false,
       createdAt: toMillis(data.createdAt),
       closedAt: data.closedAt ? toMillis(data.closedAt) : undefined,
       responseCount: data.responseCount ?? 0,
@@ -76,6 +78,7 @@ export async function getSession(sessionId: string): Promise<TestSession | null>
     testTypeId: data.testTypeId,
     status: data.status,
     requireEmail: data.requireEmail,
+    resultsPublic: data.resultsPublic ?? false,
     createdAt: toMillis(data.createdAt),
     closedAt: data.closedAt ? toMillis(data.closedAt) : undefined,
     responseCount: data.responseCount ?? 0,
@@ -87,6 +90,10 @@ export async function setSessionStatus(sessionId: string, status: 'open' | 'clos
     status,
     ...(status === 'closed' ? { closedAt: serverTimestamp() } : {}),
   });
+}
+
+export async function setResultsPublic(sessionId: string, isPublic: boolean) {
+  await updateDoc(doc(db, SESSIONS, sessionId), { resultsPublic: isPublic });
 }
 
 export async function submitResponse(params: {

@@ -58,6 +58,7 @@ export interface TestSession {
   testTypeId: string;
   status: SessionStatus;
   requireEmail: boolean;
+  resultsPublic: boolean;
   createdAt: number;
   closedAt?: number;
   responseCount: number;

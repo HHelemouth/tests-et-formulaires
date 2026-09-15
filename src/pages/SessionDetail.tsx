@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getSession, setSessionStatus } from '../firebase/sessions';
+import { getSession, setSessionStatus, setResultsPublic } from '../firebase/sessions';
 import { getTestDefinition } from '../testDefinitions/registry';
 import type { TestSession } from '../types';
 
@@ -9,6 +9,7 @@ export default function SessionDetail() {
   const [session, setSession] = useState<TestSession | null>(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [copiedResults, setCopiedResults] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -23,6 +24,7 @@ export default function SessionDetail() {
 
   const test = getTestDefinition(session.testTypeId);
   const shareUrl = `${window.location.origin}${window.location.pathname}#/t/${session.id}`;
+  const publicResultsUrl = `${window.location.origin}${window.location.pathname}#/r/${session.id}`;
 
   const toggleStatus = async () => {
     const next = session.status === 'open' ? 'closed' : 'open';
@@ -30,10 +32,22 @@ export default function SessionDetail() {
     setSession({ ...session, status: next });
   };
 
+  const toggleResultsPublic = async () => {
+    const next = !session.resultsPublic;
+    await setResultsPublic(session.id, next);
+    setSession({ ...session, resultsPublic: next });
+  };
+
   const copyLink = async () => {
     await navigator.clipboard.writeText(shareUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const copyResultsLink = async () => {
+    await navigator.clipboard.writeText(publicResultsUrl);
+    setCopiedResults(true);
+    setTimeout(() => setCopiedResults(false), 2000);
   };
 
   return (
@@ -64,13 +78,29 @@ export default function SessionDetail() {
       </div>
 
       <div className="panel">
-        <h2>Lien à partager</h2>
+        <h2>Lien à partager (formulaire)</h2>
         <div className="share-row">
           <input readOnly value={shareUrl} onClick={(e) => (e.target as HTMLInputElement).select()} />
           <button className="btn-secondary" onClick={copyLink}>
             {copied ? 'Copié !' : 'Copier'}
           </button>
         </div>
+      </div>
+
+      <div className="panel">
+        <h2>Résultats en lecture seule</h2>
+        <label className="checkbox-label" style={{ marginBottom: session.resultsPublic ? 14 : 0 }}>
+          <input type="checkbox" checked={session.resultsPublic} onChange={toggleResultsPublic} />
+          Rendre les résultats consultables via un lien, sans connexion requise
+        </label>
+        {session.resultsPublic && (
+          <div className="share-row">
+            <input readOnly value={publicResultsUrl} onClick={(e) => (e.target as HTMLInputElement).select()} />
+            <button className="btn-secondary" onClick={copyResultsLink}>
+              {copiedResults ? 'Copié !' : 'Copier'}
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="panel-actions" style={{ marginTop: 24 }}>

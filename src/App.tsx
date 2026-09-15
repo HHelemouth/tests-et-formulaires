@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard';
 import SessionDetail from './pages/SessionDetail';
 import SessionResults from './pages/SessionResults';
 import PublicTest from './pages/PublicTest';
+import PublicResults from './pages/PublicResults';
 
 export default function App() {
   return (
@@ -12,6 +13,7 @@ export default function App() {
       <HashRouter>
         <Routes>
           <Route path="/t/:sessionId" element={<PublicTest />} />
+          <Route path="/r/:sessionId" element={<PublicResults />} />
           <Route
             path="/"
             element={
