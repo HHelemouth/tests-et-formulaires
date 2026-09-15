@@ -174,3 +174,11 @@ a { color: var(--accent); }
 .insights-subhead { font-family: 'Jost', sans-serif; font-size: 0.9rem; font-weight: 600; margin: 20px 0 8px; }
 .insights-list { margin: 0; padding-left: 20px; font-size: 0.88rem; display: flex; flex-direction: column; gap: 8px; }
 .insights-list li { line-height: 1.5; }
+
+.likert-row { padding: 18px 0; border-bottom: 1px solid var(--line); }
+.likert-statement { font-size: 0.92rem; margin-bottom: 10px; }
+.likert-scale-row { display: flex; align-items: center; gap: 12px; }
+.likert-endpoint { font-size: 0.72rem; color: var(--ink-soft); flex-shrink: 0; max-width: 80px; }
+.likert-endpoint:last-child { text-align: right; }
+
+.dim-tone-list { list-style: none; padding: 0; margin: 10px 0 0; font-size: 0.82rem; color: var(--ink-soft); display: flex; flex-wrap: wrap; gap: 4px 16px; }

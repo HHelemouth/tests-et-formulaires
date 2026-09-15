@@ -103,6 +103,13 @@ export default function SessionResults() {
               </p>
             )}
             <p>{insights.overview}</p>
+            <ul className="dim-tone-list">
+              {insights.dimensionLines.map((d) => (
+                <li key={d.name}>
+                  <strong>{d.name}</strong> — {d.tone}
+                </li>
+              ))}
+            </ul>
 
             {insights.watchouts.length > 0 && (
               <>

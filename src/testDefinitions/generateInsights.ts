@@ -42,6 +42,7 @@ export function generateInsights(
   responseCount: number
 ): GeneratedInsights {
   const insightMap = INSIGHT_REGISTRY[test.id] ?? {};
+  const hasInsightMap = Object.keys(insightMap).length > 0;
 
   const dimensionLines = dimensionResults.map((d) => ({
     name: d.name,
@@ -55,13 +56,13 @@ export function generateInsights(
     if (lean.rawAverage === null || Math.abs(lean.rawAverage) < THRESHOLD) return;
     const key = `${lean.dimKey}-${lean.index}`;
     const insight = insightMap[key];
+    if (!insight) return;
     const dim = test.dimensions.find((d) => d.key === lean.dimKey);
     const dimName = dim?.name ?? lean.dimKey;
     const leansRight = lean.rawAverage > 0;
-    const word = leansRight ? lean.rightWord : lean.leftWord;
+    const word = lean.kind === 'differential' ? (leansRight ? lean.rightWord! : lean.leftWord!) : lean.statement!;
     const magnitude = Math.abs(lean.rawAverage);
 
-    if (!insight) return;
     const isWatch = (leansRight && insight.watchPole === 'right') || (!leansRight && insight.watchPole === 'left');
 
     if (isWatch) {
@@ -79,7 +80,22 @@ export function generateInsights(
 
   let overview: string;
   if (topStrengths.length === 0 && topWatchouts.length === 0) {
-    overview = "Les réponses ne font pas encore ressortir de signal fort dans un sens ou dans l'autre.";
+    if (hasInsightMap) {
+      overview = "Les réponses ne font pas encore ressortir de signal fort dans un sens ou dans l'autre.";
+    } else {
+      // Pas de pistes détaillées configurées pour ce test : on retombe sur
+      // la tonalité par dimension, qui reste toujours calculable.
+      const positive = dimensionLines.filter((d) => d.tone.includes('positive'));
+      const negative = dimensionLines.filter((d) => d.tone.includes('négative'));
+      if (positive.length === 0 && negative.length === 0) {
+        overview = "Les résultats sont globalement mitigés, sans tendance nette par dimension.";
+      } else {
+        const parts: string[] = [];
+        if (positive.length > 0) parts.push(`plutôt bien perçu sur ${positive.map((d) => d.name).join(', ')}`);
+        if (negative.length > 0) parts.push(`plus fragile sur ${negative.map((d) => d.name).join(', ')}`);
+        overview = `Vu par dimension, l'outil est ${parts.join(' — ')}.`;
+      }
+    }
   } else {
     const strengthWords = topStrengths.map((s) => s.label.toLowerCase()).join(', ');
     const watchWords = topWatchouts.map((w) => w.label.toLowerCase()).join(', ');

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getSession, submitResponse } from '../firebase/sessions';
 import { getTestDefinition } from '../testDefinitions/registry';
-import { totalItemCount, itemKey } from '../testDefinitions/scoring';
+import { totalItemCount, itemKey, dimensionScale } from '../testDefinitions/scoring';
 import type { TestSession } from '../types';
 
 export default function PublicTest() {
@@ -104,18 +104,18 @@ export default function PublicTest() {
         </div>
       )}
 
-      {test.dimensions.map((dim) => (
-        <div key={dim.key}>
-          <div className="dim-title">{dim.name}</div>
-          {dim.description && <div className="dim-sub">{dim.description}</div>}
-          {dim.pairs.map((pair, i) => {
-            const key = itemKey(dim.key, i);
-            return (
-              <div className="pair-row" key={key}>
-                <div className="pair-label left">{pair.left}</div>
+      {test.dimensions.map((dim) => {
+        const { min, max } = dimensionScale(test, dim);
+        return (
+          <div key={dim.key}>
+            <div className="dim-title">{dim.name}</div>
+            {dim.description && <div className="dim-sub">{dim.description}</div>}
+            {dim.items.map((item, i) => {
+              const key = itemKey(dim.key, i);
+              const scaleInputs = (
                 <div className="scale">
-                  {Array.from({ length: test.scaleMax - test.scaleMin + 1 }, (_, idx) => {
-                    const v = test.scaleMin + idx;
+                  {Array.from({ length: max - min + 1 }, (_, idx) => {
+                    const v = min + idx;
                     const inputId = `${key}-${v}`;
                     return (
                       <label key={v} className={answers[key] === v ? 'checked' : ''}>
@@ -131,12 +131,32 @@ export default function PublicTest() {
                     );
                   })}
                 </div>
-                <div className="pair-label right">{pair.right}</div>
-              </div>
-            );
-          })}
-        </div>
-      ))}
+              );
+
+              if (item.kind === 'differential') {
+                return (
+                  <div className="pair-row" key={key}>
+                    <div className="pair-label left">{item.left}</div>
+                    {scaleInputs}
+                    <div className="pair-label right">{item.right}</div>
+                  </div>
+                );
+              }
+
+              return (
+                <div className="likert-row" key={key}>
+                  <div className="likert-statement">{item.statement}</div>
+                  <div className="likert-scale-row">
+                    <span className="likert-endpoint">Pas du tout d'accord</span>
+                    {scaleInputs}
+                    <span className="likert-endpoint">Tout à fait d'accord</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        );
+      })}
 
       <div className="submit-bar">
         <button className="btn-primary" disabled={!canSubmit || submitting} onClick={handleSubmit}>
