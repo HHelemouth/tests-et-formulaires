@@ -1,5 +1,5 @@
-import { TestDefinition, DimensionResult } from '../types';
-import { ItemLean } from './scoring';
+import type { TestDefinition, DimensionResult } from '../types';
+import type { ItemLean } from './scoring';
 import { INSIGHT_REGISTRY } from './insights';
 
 export interface Watchout {
