@@ -167,3 +167,10 @@ a { color: var(--accent); }
   }
   .btn-secondary { background: transparent; }
 }
+
+.insights-panel { background: var(--accent-tint); border-color: var(--accent); }
+.insights-panel h2 { margin-bottom: 10px; }
+.insights-panel p { margin: 0; font-size: 0.92rem; }
+.insights-subhead { font-family: 'Jost', sans-serif; font-size: 0.9rem; font-weight: 600; margin: 20px 0 8px; }
+.insights-list { margin: 0; padding-left: 20px; font-size: 0.88rem; display: flex; flex-direction: column; gap: 8px; }
+.insights-list li { line-height: 1.5; }

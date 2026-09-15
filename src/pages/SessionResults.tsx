@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getSession, listResponses } from '../firebase/sessions';
 import { getTestDefinition } from '../testDefinitions/registry';
-import { computeResults } from '../testDefinitions/scoring';
+import { computeResults, computeItemLeans } from '../testDefinitions/scoring';
+import { generateInsights } from '../testDefinitions/generateInsights';
 import type { TestSession, TestResponse, DimensionResult } from '../types';
 
 export default function SessionResults() {
@@ -35,6 +36,8 @@ export default function SessionResults() {
   if (!test) return <div className="page"><p className="muted">Type de test inconnu.</p></div>;
 
   const results: DimensionResult[] = computeResults(test, responses);
+  const itemLeans = computeItemLeans(test, responses);
+  const insights = generateInsights(test, results, itemLeans, responses.length);
   const resultsUrl = `${window.location.origin}${window.location.pathname}#/session/${session.id}/results`;
 
   const copyLink = async () => {
@@ -92,6 +95,29 @@ export default function SessionResults() {
         <p className="muted">Aucune réponse pour le moment.</p>
       ) : (
         <>
+          <div className="panel insights-panel">
+            <h2>Interprétation</h2>
+            {insights.sampleTooSmall && (
+              <p className="muted" style={{ marginBottom: 12 }}>
+                Peu de réponses pour l'instant ({responses.length}) — cette lecture est encore fragile, à confirmer avec plus de participants.
+              </p>
+            )}
+            <p>{insights.overview}</p>
+
+            {insights.watchouts.length > 0 && (
+              <>
+                <h3 className="insights-subhead">Pistes de réflexion</h3>
+                <ul className="insights-list">
+                  {insights.watchouts.map((w) => (
+                    <li key={w.label + w.dimension}>
+                      <strong>{w.label}</strong> ({w.dimension}) — {w.suggestion}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </div>
+
           <div className="res-summary">
             {results.map((d) => (
               <div className="res-card" key={d.key}>

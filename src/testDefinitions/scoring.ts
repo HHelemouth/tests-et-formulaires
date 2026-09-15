@@ -47,6 +47,45 @@ export function computeResults(test: TestDefinition, responses: TestResponse[]):
   });
 }
 
+export interface ItemLean {
+  dimKey: string;
+  index: number;
+  leftWord: string;
+  rightWord: string;
+  rawAverage: number | null; // -half..+half, positif = penche vers la droite
+  count: number;
+}
+
+// Moyenne brute par item, SANS inversion : reflète directement de quel côté
+// (mot de gauche ou de droite) les réponses penchent réellement.
+export function computeItemLeans(test: TestDefinition, responses: TestResponse[]): ItemLean[] {
+  const leans: ItemLean[] = [];
+  test.dimensions.forEach((dim) => {
+    dim.pairs.forEach((pair, i) => {
+      const key = itemKey(dim.key, i);
+      const mid = (test.scaleMin + test.scaleMax) / 2;
+      let sum = 0;
+      let count = 0;
+      responses.forEach((r) => {
+        const raw = r.answers[key];
+        if (raw !== undefined) {
+          sum += raw - mid;
+          count += 1;
+        }
+      });
+      leans.push({
+        dimKey: dim.key,
+        index: i,
+        leftWord: pair.left,
+        rightWord: pair.right,
+        rawAverage: count > 0 ? sum / count : null,
+        count,
+      });
+    });
+  });
+  return leans;
+}
+
 export function totalItemCount(test: TestDefinition): number {
   return test.dimensions.reduce((sum, d) => sum + d.pairs.length, 0);
 }
