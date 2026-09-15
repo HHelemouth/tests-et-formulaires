@@ -15,14 +15,12 @@ export default function App() {
         <Routes>
           <Route path="/t/:sessionId" element={<PublicTest />} />
           <Route path="/r/:sessionId" element={<PublicResults />} />
-          <Route
-            path="/"
-            element={
-              <RequireAuth>
-                <Dashboard />
-              </RequireAuth>
-            }
-          />
+          {/* Accès libre : le tableau de bord gère lui-même l'état connecté/non
+              connecté, et la bibliothèque de méthodes est une simple ressource
+              de consultation. Seules les pages de gestion d'une session précise
+              restent réservées à son propriétaire. */}
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/methods" element={<MethodsLibrary />} />
           <Route
             path="/session/:id"
             element={
@@ -36,14 +34,6 @@ export default function App() {
             element={
               <RequireAuth>
                 <SessionResults />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/methods"
-            element={
-              <RequireAuth>
-                <MethodsLibrary />
               </RequireAuth>
             }
           />

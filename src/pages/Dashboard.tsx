@@ -6,7 +6,7 @@ import type { TestSession } from '../types';
 import { listTestDefinitions, getTestDefinition } from '../testDefinitions/registry';
 
 export default function Dashboard() {
-  const { user, logout } = useAuth();
+  const { user, loading: authLoading, loginWithGoogle, logout } = useAuth();
   const navigate = useNavigate();
   const [sessions, setSessions] = useState<TestSession[]>([]);
   const [loading, setLoading] = useState(true);
@@ -45,6 +45,44 @@ export default function Dashboard() {
     navigate(`/session/${id}`);
   };
 
+  if (authLoading) {
+    return <div className="page"><p className="muted">Chargement...</p></div>;
+  }
+
+  // Visiteur non connecté : accès libre au site (bibliothèque de méthodes),
+  // la connexion n'est demandée qu'au moment de vouloir créer une session.
+  if (!user) {
+    return (
+      <div className="page">
+        <header className="page-header">
+          <h1>Tests &amp; Formulaires</h1>
+          <div className="header-actions">
+            <Link to="/methods" className="btn-secondary">
+              Méthodes UX
+            </Link>
+            <button className="btn-primary" onClick={() => loginWithGoogle()}>
+              Se connecter avec Google
+            </button>
+          </div>
+        </header>
+        <p className="lede">
+          Outil pour créer des sessions de test UX (AttrakDiff, meCUE), les partager, et consulter les résultats avec
+          interprétation automatique.
+        </p>
+        <div className="panel">
+          <h2>Pour créer une session</h2>
+          <p className="muted" style={{ margin: '8px 0 16px' }}>
+            La connexion n'est nécessaire que pour créer et gérer tes propres sessions de test. La bibliothèque de
+            méthodes reste consultable librement.
+          </p>
+          <button className="btn-primary" onClick={() => loginWithGoogle()}>
+            Se connecter avec Google
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="page">
       <header className="page-header">
@@ -53,7 +91,7 @@ export default function Dashboard() {
           <Link to="/methods" className="btn-secondary">
             Méthodes UX
           </Link>
-          <span className="user-email">{user?.email}</span>
+          <span className="user-email">{user.email}</span>
           <button className="btn-secondary" onClick={() => logout()}>
             Se déconnecter
           </button>

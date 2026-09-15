@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../firebase/AuthContext';
 import { UX_METHODS } from '../methodsLibrary/methods';
 import type { MethodCategory } from '../methodsLibrary/methods';
 
 const CATEGORIES: MethodCategory[] = ['Évaluation quantitative', 'Évaluation qualitative', 'Évaluation experte', 'Idéation & conception'];
 
 export default function MethodsLibrary() {
+  const { user, loginWithGoogle } = useAuth();
   const [activeCategory, setActiveCategory] = useState<MethodCategory | 'Toutes'>('Toutes');
 
   const visible = activeCategory === 'Toutes' ? UX_METHODS : UX_METHODS.filter((m) => m.category === activeCategory);
@@ -13,7 +15,7 @@ export default function MethodsLibrary() {
   return (
     <div className="page">
       <Link to="/" className="back-link">
-        ← Mes sessions
+        ← Accueil
       </Link>
 
       <header className="page-header">
@@ -21,6 +23,11 @@ export default function MethodsLibrary() {
           <h1>Méthodes UX</h1>
           <p className="muted">Bibliothèque de référence, à consulter selon les besoins du projet.</p>
         </div>
+        {!user && (
+          <button className="btn-primary" onClick={() => loginWithGoogle()}>
+            Se connecter avec Google
+          </button>
+        )}
       </header>
 
       <div className="method-filters">
