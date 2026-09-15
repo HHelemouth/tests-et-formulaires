@@ -6,7 +6,6 @@ import {
   getDocs,
   query,
   where,
-  orderBy,
   updateDoc,
   increment,
   serverTimestamp,
@@ -45,9 +44,9 @@ export async function createSession(params: {
 }
 
 export async function listSessionsForUser(ownerId: string): Promise<TestSession[]> {
-  const q = query(collection(db, SESSIONS), where('ownerId', '==', ownerId), orderBy('createdAt', 'desc'));
+  const q = query(collection(db, SESSIONS), where('ownerId', '==', ownerId));
   const snap = await getDocs(q);
-  return snap.docs.map((d) => {
+  const sessions = snap.docs.map((d) => {
     const data = d.data();
     return {
       id: d.id,
@@ -62,6 +61,7 @@ export async function listSessionsForUser(ownerId: string): Promise<TestSession[
       responseCount: data.responseCount ?? 0,
     };
   });
+  return sessions.sort((a, b) => b.createdAt - a.createdAt);
 }
 
 export async function getSession(sessionId: string): Promise<TestSession | null> {
@@ -110,9 +110,9 @@ export async function submitResponse(params: {
 }
 
 export async function listResponses(sessionId: string): Promise<TestResponse[]> {
-  const q = query(collection(db, RESPONSES), where('sessionId', '==', sessionId), orderBy('submittedAt', 'asc'));
+  const q = query(collection(db, RESPONSES), where('sessionId', '==', sessionId));
   const snap = await getDocs(q);
-  return snap.docs.map((d) => {
+  const responses = snap.docs.map((d) => {
     const data = d.data();
     return {
       id: d.id,
@@ -124,4 +124,5 @@ export async function listResponses(sessionId: string): Promise<TestResponse[]> 
       submittedAt: toMillis(data.submittedAt),
     };
   });
+  return responses.sort((a, b) => a.submittedAt - b.submittedAt);
 }

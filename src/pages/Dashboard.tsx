@@ -10,6 +10,7 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [sessions, setSessions] = useState<TestSession[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [showNew, setShowNew] = useState(false);
 
   const [name, setName] = useState('');
@@ -19,10 +20,15 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (!user) return;
-    listSessionsForUser(user.uid).then((s) => {
-      setSessions(s);
-      setLoading(false);
-    });
+    listSessionsForUser(user.uid)
+      .then((s) => {
+        setSessions(s);
+        setLoading(false);
+      })
+      .catch((e) => {
+        setLoadError(e instanceof Error ? e.message : 'Erreur de chargement.');
+        setLoading(false);
+      });
   }, [user]);
 
   const handleCreate = async () => {
@@ -89,6 +95,8 @@ export default function Dashboard() {
 
       {loading ? (
         <p className="muted">Chargement...</p>
+      ) : loadError ? (
+        <p className="error-text">{loadError}</p>
       ) : sessions.length === 0 ? (
         <p className="muted">Aucune session pour le moment.</p>
       ) : (

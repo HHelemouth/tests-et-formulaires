@@ -10,18 +10,25 @@ export default function SessionResults() {
   const [session, setSession] = useState<TestSession | null>(null);
   const [responses, setResponses] = useState<TestResponse[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (!id) return;
-    Promise.all([getSession(id), listResponses(id)]).then(([s, r]) => {
-      setSession(s);
-      setResponses(r);
-      setLoading(false);
-    });
+    Promise.all([getSession(id), listResponses(id)])
+      .then(([s, r]) => {
+        setSession(s);
+        setResponses(r);
+        setLoading(false);
+      })
+      .catch((e) => {
+        setLoadError(e instanceof Error ? e.message : 'Erreur de chargement.');
+        setLoading(false);
+      });
   }, [id]);
 
   if (loading) return <div className="page"><p className="muted">Chargement...</p></div>;
+  if (loadError) return <div className="page"><p className="error-text">{loadError}</p></div>;
   if (!session) return <div className="page"><p className="muted">Session introuvable.</p></div>;
 
   const test = getTestDefinition(session.testTypeId);
