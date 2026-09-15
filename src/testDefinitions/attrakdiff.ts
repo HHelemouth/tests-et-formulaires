@@ -4,6 +4,8 @@ export const attrakdiffTest: TestDefinition = {
   id: 'attrakdiff-fr',
   name: 'AttrakDiff',
   shortDescription: "Évaluation de l'expérience utilisateur (qualité pragmatique, hédonique, attractivité)",
+  about:
+    "Évalue la perception d'une interface ou d'un produit sur 4 axes : sa facilité d'usage (qualité pragmatique), ce qu'il dit de la personne qui l'utilise (identité), ce qu'il apporte de nouveau ou de stimulant, et l'impression générale (attractivité). Les répondants placent leur ressenti entre 28 paires de mots opposés (ex. Simple ↔ Compliqué), sans jamais lire de mot négatif ou positif à l'écran — la note se calcule ensuite. Compte 5 à 8 minutes de passation.",
   instructions:
     "Pour chaque ligne, place ton ressenti entre les deux mots, du plus proche du mot de gauche au plus proche du mot de droite. Il n'y a pas de bonne réponse : ce qui compte, c'est ton impression spontanée.",
   scaleMin: 1,

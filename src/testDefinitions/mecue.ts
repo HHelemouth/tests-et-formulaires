@@ -7,6 +7,8 @@ export const mecueTest: TestDefinition = {
   name: 'meCUE',
   shortDescription:
     "Évaluation modulaire de l'expérience utilisateur (utilité, utilisabilité, esthétique, statut, engagement, émotions, fidélité, intention d'usage)",
+  about:
+    "Évalue un produit en profondeur sur 10 dimensions indépendantes : l'utilité et la facilité d'usage, l'esthétique, le statut social que confère le produit, l'attachement émotionnel qu'il suscite, les émotions positives et négatives ressenties à l'usage, la fidélité, l'intention de réutilisation, et un jugement global. Les répondants notent leur degré d'accord (1 à 7) avec 30 affirmations comme \"Le produit est facile à utiliser\". Plus complet que l'AttrakDiff mais aussi plus long : compte 8 à 12 minutes de passation.",
   instructions:
     "Pour chaque affirmation, indique ton degré d'accord, de \"pas du tout d'accord\" à \"tout à fait d'accord\". Sois spontané(e) : ta réponse doit refléter ta première impression, même si l'affirmation ne te semble pas totalement correspondre à ton expérience.",
   scaleMin: 1,

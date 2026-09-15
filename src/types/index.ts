@@ -38,6 +38,9 @@ export interface TestDefinition {
   id: string;
   name: string;
   shortDescription: string;
+  // Description à l'intention de la personne qui crée la session : ce que
+  // le test évalue et comment il fonctionne (nombre d'items, échelle...).
+  about: string;
   instructions: string;
   scaleMin: number;
   scaleMax: number;

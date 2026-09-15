@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../firebase/AuthContext';
 import { createSession, listSessionsForUser } from '../firebase/sessions';
 import type { TestSession } from '../types';
-import { listTestDefinitions } from '../testDefinitions/registry';
+import { listTestDefinitions, getTestDefinition } from '../testDefinitions/registry';
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
@@ -78,6 +78,9 @@ export default function Dashboard() {
               ))}
             </select>
           </label>
+          {getTestDefinition(testTypeId) && (
+            <p className="test-about">{getTestDefinition(testTypeId)!.about}</p>
+          )}
           <label className="checkbox-label">
             <input type="checkbox" checked={requireEmail} onChange={(e) => setRequireEmail(e.target.checked)} />
             Demander l'email des participants

@@ -182,3 +182,5 @@ a { color: var(--accent); }
 .likert-endpoint:last-child { text-align: right; }
 
 .dim-tone-list { list-style: none; padding: 0; margin: 10px 0 0; font-size: 0.82rem; color: var(--ink-soft); display: flex; flex-wrap: wrap; gap: 4px 16px; }
+
+.test-about { font-size: 0.82rem; color: var(--ink-soft); margin: -4px 0 0; line-height: 1.5; }
